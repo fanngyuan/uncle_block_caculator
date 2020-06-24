@@ -14,6 +14,7 @@ const diffAdjTimeTarget = time.Hour*24*14
 const initPerBlockTime = time.Second*60
 const uncleBlockRateTarget = 8
 const reduceHalfTime = time.Hour*24*365*4
+const minBlockTime = time.Second*20
 var perAdjCoin = int(totalCOIN/(2*(reduceHalfTime.Seconds()/diffAdjTimeTarget.Seconds())))
 
 // Block represents each 'item' in the blockchain
@@ -103,6 +104,9 @@ func adjustDiff(blocksCount int,perAdjCoin int)(time.Duration,int,func()bool,int
 
 	// 下个周期出块时间
 	nextPerBlockTime:=float64(unclesRate)/float64(uncleBlockRateTarget)*float64(prevPerblockTime)
+	if nextPerBlockTime<minBlockTime.Seconds(){
+		nextPerBlockTime=minBlockTime.Seconds()
+	}
 	nextBlockCount := nextDurationTarget/nextPerBlockTime
 	nextPerBlockTimeDuration:=time.Duration(int(nextPerBlockTime/time.Second.Seconds()))*time.Second
 
